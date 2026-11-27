@@ -10,7 +10,7 @@ Click **Edit boxes** for the editor, or **Open BBOX workspace** for the fullscre
 
 ## Kromoss example
 
-Open [kromoss-dmd-bbox.json](examples/kromoss-dmd-bbox.json) and install its missing nodes with Manager. The example uses EXL3 CLIP Loader, ComfyUI-ppm, and ComfyUI-UtilsCollection.
+Open [kromoss-dmd-bbox.json](examples/kromoss-dmd-bbox.json) and install its missing nodes with Manager. The example uses [EXL3 CLIP Loader](https://github.com/esbe1175/comfyui-exl3-clip), [ComfyUI-ppm](https://github.com/pamparamm/ComfyUI-ppm), and [ComfyUI-UtilsCollection](https://github.com/silveroxides/ComfyUI-UtilsCollection).
 
 | Download | ComfyUI folder |
 |---|---|
