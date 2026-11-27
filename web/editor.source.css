@@ -175,6 +175,6 @@ svg{flex:none}form{margin:0}
 .generation-steps span.done{background:var(--color-primary)}
 .generation-steps span.current{box-shadow:0 0 0 1px var(--color-base-100),0 0 0 2px var(--color-primary)}
 .generation-steps.dense{--step-size:4px}
-.generation-bar [data-action="generate"]{min-height:40px;padding-inline:20px;flex:none}
+.generation-bar [data-action="generate"]{width:100%;min-height:40px;padding-inline:20px;justify-content:center}
 .generation-bar kbd{font:inherit;font-size:10px;opacity:.6;margin-left:12px}
 @media(max-width:650px){.generation-bar{padding:10px 12px}.generation-bar kbd{display:none}}

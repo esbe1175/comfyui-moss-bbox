@@ -6,7 +6,7 @@ Draw boxes and describe their contents in ComfyUI. The node emits the native MOS
 
 Install `comfyui-moss-bbox` from ComfyUI Manager and restart ComfyUI. Add **MOSS-Image BBOX editor** from the conditioning menu. Connect **prompt** to the text encoder. Connect **aspect ratio** and the same megapixel value to **MOSS Aspect Ratio Resolution**, then use its dimensions for the latent.
 
-Click **Edit boxes** for the editor, or **Open BBOX workspace** for the fullscreen view. Press **R** to draw a box. Select Character, Object, or Text and describe what belongs inside it. **Generate** or **Ctrl+Enter** runs the workflow and displays sampler steps beside the button.
+Click **Edit boxes** for the editor, or **Open BBOX workspace** for the fullscreen view. Press **R** to draw a box. Select Character, Object, or Text and describe what belongs inside it. **Generate** or **Ctrl+Enter** runs the workflow. Sampler steps appear in the bar above Generate. Longer runs group steps into dots to fit the available width.
 
 ## Kromoss example
 
