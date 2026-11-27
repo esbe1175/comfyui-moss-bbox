@@ -106,6 +106,8 @@ export class BBoxEditor {
   bar.hidden=false;
   bar.setAttribute('aria-valuemax',String(steps));
   bar.setAttribute('aria-valuenow',String(value));
+  bar.style.setProperty('--step-count',String(steps));
+  bar.classList.toggle('dense',steps>18);
   if(steps>60){
    bar.replaceChildren();
    bar.classList.add('continuous');
@@ -113,11 +115,16 @@ export class BBoxEditor {
    return;
   }
   bar.classList.remove('continuous');
+  const fill=value===steps?100:Math.max(0,(value-.5)*100/steps);
+  bar.style.setProperty('--step-fill',`${fill}%`);
   if(bar.children.length!==steps){
    const dots=Array.from({length:steps},()=>document.createElement('span'));
    bar.replaceChildren(...dots);
   }
-  Array.from(bar.children).forEach((dot,index)=>dot.classList.toggle('done',index<value));
+  Array.from(bar.children).forEach((dot,index)=>{
+   dot.classList.toggle('done',index<value);
+   dot.classList.toggle('current',index===Math.ceil(value)-1);
+  });
  }
  async generate(){
   if(!this.workspace||this.generationSubmitting||this.closed)return;

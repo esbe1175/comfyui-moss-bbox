@@ -163,13 +163,16 @@ svg{flex:none}form{margin:0}
 .modal.workspace{padding:0}
 .modal.workspace .editor-shell{width:100vw;height:100dvh;border:0;border-radius:0;box-shadow:none}
 .generation-bar{display:flex;gap:14px;align-items:center;justify-content:flex-end;flex:none;padding:12px 20px;border-top:1px solid var(--line);background:var(--color-base-100)}
-.generation-readout{display:grid;gap:5px;justify-items:end;min-width:0;max-width:240px;text-align:right}
+.generation-readout{display:grid;gap:3px;justify-items:end;min-width:0;max-width:286px;text-align:right}
 .generation-status{min-width:0;color:var(--muted);font-size:12px}
-.generation-steps{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px}
+.generation-steps{--step-size:7px;display:grid;position:relative;grid-template-columns:repeat(var(--step-count),minmax(0,1fr));place-items:center;width:min(30vw,240px);height:16px}
 .generation-steps[hidden]{display:none}
-.generation-steps span{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.generation-steps::before{content:"";position:absolute;inset-inline:0;height:4px;border-radius:3px;background:linear-gradient(to right,var(--color-primary) var(--step-fill),var(--line) var(--step-fill))}
+.generation-steps span{position:relative;width:var(--step-size);height:var(--step-size);border-radius:50%;background:var(--muted);box-shadow:0 0 0 1px var(--color-base-100)}
 .generation-steps span.done{background:var(--color-primary)}
-.generation-steps.continuous{width:min(130px,100%);height:5px;border-radius:3px;background:linear-gradient(to right,var(--color-primary) var(--step-fill),var(--line) var(--step-fill))}
+.generation-steps span.current{box-shadow:0 0 0 1px var(--color-base-100),0 0 0 2px var(--color-primary)}
+.generation-steps.dense{--step-size:4px;width:min(45vw,268px)}
+.generation-steps.continuous::before{height:5px}
 .generation-bar [data-action="generate"]{min-height:40px;padding-inline:20px;flex:none}
 .generation-bar kbd{font:inherit;font-size:10px;opacity:.6;margin-left:12px}
 @media(max-width:650px){.generation-bar{gap:12px;padding:10px 12px}.generation-bar kbd{display:none}}

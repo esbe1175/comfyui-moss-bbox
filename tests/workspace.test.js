@@ -77,6 +77,11 @@ test('sampler progress renders one dot per step next to Generate',async t=>{
  assert.equal(bar.getAttribute('aria-valuenow'),'3');
  assert.equal(root.querySelector('.generation-status').textContent,'Step 3 of 8');
  assert.equal(bar.closest('.generation-bar').querySelector('[data-action="generate"]').textContent.includes('Generate'),true);
+ h.dispatch('progress',{prompt_id:'progress-job',value:14,max:30});
+ assert.equal(bar.children.length,30);
+ assert.equal(bar.querySelectorAll('.done').length,14);
+ assert.equal(bar.querySelector('.current'),bar.children[13]);
+ assert.equal(bar.classList.contains('dense'),true);
  h.dispatch('execution_interrupted',{prompt_id:'progress-job'});
  assert.equal(bar.hidden,true);
 });
