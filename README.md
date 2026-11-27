@@ -2,6 +2,8 @@
 
 Draw boxes and describe their contents in ComfyUI. The node emits the native MOSS-Image layout prompt and the canvas aspect ratio.
 
+![Generated tea stall in the BBOX workspace, with boxes around the tea seller, copper teapot, and TEA sign](assets/bbox-workspace.png)
+
 ## Use
 
 Install `comfyui-moss-bbox` from ComfyUI Manager and restart ComfyUI. Add **MOSS-Image BBOX editor** from the conditioning menu. Connect **prompt** to the text encoder. Connect **aspect ratio** and the same megapixel value to **MOSS Aspect Ratio Resolution**, then use its dimensions for the latent.
