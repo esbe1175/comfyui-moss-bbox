@@ -8,7 +8,18 @@ Install `comfyui-moss-bbox` from ComfyUI Manager and restart ComfyUI. Add **MOSS
 
 Click **Edit boxes** for the editor, or **Open BBOX workspace** for the fullscreen view. Press **R** to draw a box. Select Character, Object, or Text and describe what belongs inside it. **Generate** or **Ctrl+Enter** runs the workflow and displays sampler steps beside the button.
 
-The [Kromoss DMD example](examples/kromoss-dmd-bbox.json) uses EXL3 CLIP Loader, ComfyUI-ppm, and ComfyUI-UtilsCollection. Install them with Manager's missing-node installer. Put the Kromoss diffusion model and its OPD DMD LoRA in `models/diffusion_models` and `models/loras`, respectively. Select your own style adapter in **Style LoRA** and enable that node when you want to use it.
+## Kromoss example
+
+Open [kromoss-dmd-bbox.json](examples/kromoss-dmd-bbox.json) and install its missing nodes with Manager. The example uses EXL3 CLIP Loader, ComfyUI-ppm, and ComfyUI-UtilsCollection.
+
+| Download | ComfyUI folder |
+|---|---|
+| [Kromoss INT8 OPD](https://huggingface.co/lodestones/Kromoss/blob/main/diffusion_models/kromoss_int8_convrot_OPD-priming.safetensors) | `models/diffusion_models/` |
+| [Kromoss 8-step OPD DMD LoRA](https://huggingface.co/lodestones/Kromoss/blob/main/experimental/opd-priming-8-steps-dmd-lora_cfg-static_20000.safetensors) | `models/loras/` |
+| [FLUX.2 small VAE](https://huggingface.co/Comfy-Org/MOSS-Image/blob/main/vae/flux2-vae_small.safetensors) | `models/vae/` |
+| [Qwen3.5-9B EXL3 4.00 bpw](https://huggingface.co/turboderp/Qwen3.5-9B-exl3/tree/4.00bpw) | `models/text_encoders/exl3/Qwen3.5-9B-exl3-4.00bpw/` (download the whole revision) |
+
+Select your adapter in **Style LoRA**, enable that node, and keep its CLIP strength at zero for model-only adapters.
 
 ## Development
 

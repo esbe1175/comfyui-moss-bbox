@@ -557,7 +557,14 @@
             "properties": {
               "Node name for S&R": "LoraLoaderModelOnly",
               "cnr_id": "comfy-core",
-              "ver": "0.41.0"
+              "ver": "0.41.0",
+              "models": [
+                {
+                  "name": "opd-priming-8-steps-dmd-lora_cfg-static_20000.safetensors",
+                  "url": "https://huggingface.co/lodestones/Kromoss/resolve/main/experimental/opd-priming-8-steps-dmd-lora_cfg-static_20000.safetensors",
+                  "directory": "loras"
+                }
+              ]
             },
             "widgets_values": [
               "opd-priming-8-steps-dmd-lora_cfg-static_20000.safetensors",
@@ -608,7 +615,14 @@
             "properties": {
               "Node name for S&R": "VAELoader",
               "cnr_id": "comfy-core",
-              "ver": "0.40.0"
+              "ver": "0.40.0",
+              "models": [
+                {
+                  "name": "flux2-vae_small.safetensors",
+                  "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/main/vae/flux2-vae_small.safetensors",
+                  "directory": "vae"
+                }
+              ]
             },
             "widgets_values": [
               "flux2-vae_small.safetensors"
@@ -1010,7 +1024,14 @@
             "properties": {
               "Node name for S&R": "UNETLoader",
               "cnr_id": "comfy-core",
-              "ver": "0.41.0"
+              "ver": "0.41.0",
+              "models": [
+                {
+                  "name": "kromoss_int8_convrot_OPD-priming.safetensors",
+                  "url": "https://huggingface.co/lodestones/Kromoss/resolve/main/diffusion_models/kromoss_int8_convrot_OPD-priming.safetensors",
+                  "directory": "diffusion_models"
+                }
+              ]
             },
             "widgets_values": [
               "kromoss_int8_convrot_OPD-priming.safetensors",
