@@ -82,6 +82,15 @@ test('sampler progress renders one dot per step next to Generate',async t=>{
  assert.equal(bar.querySelectorAll('.done').length,14);
  assert.equal(bar.querySelector('.current'),bar.children[13]);
  assert.equal(bar.classList.contains('dense'),true);
+ h.dispatch('progress',{prompt_id:'progress-job',value:31,max:60});
+ assert.equal(bar.children.length,30);
+ assert.equal(bar.querySelectorAll('.done').length,15);
+ assert.equal(bar.querySelector('.current'),bar.children[15]);
+ assert.equal(root.querySelector('.generation-dot-key').textContent,'2 steps per dot');
+ Object.defineProperty(bar,'clientWidth',{value:120,configurable:true});
+ h.dispatch('progress',{prompt_id:'progress-job',value:14,max:30});
+ assert.equal(bar.children.length,15);
+ assert.equal(bar.getAttribute('aria-valuenow'),'14');
  h.dispatch('execution_interrupted',{prompt_id:'progress-job'});
  assert.equal(bar.hidden,true);
 });

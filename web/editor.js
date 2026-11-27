@@ -42,7 +42,7 @@ export class BBoxEditor {
    </main><aside class="sidebar"><section class="scene-field"><label for="scene">Scene</label><textarea id="scene" class="textarea textarea-sm" data-field="scene" placeholder="Describe the whole image…" title="Overall scene, medium, lighting, palette and camera."></textarea></section>
     <div class="region-heading"><h2>Boxes <span class="count"></span></h2><div>${button('new-folder','folder','','New folder from selected boxes')}${button('add','plus','','Create a box · R to draw a custom box')}</div></div><div class="regions" aria-label="Box descriptions"></div>
    </aside></div>
-   ${this.workspace?`<footer class="generation-bar"><div class="generation-readout"><span class="generation-status" role="status" aria-live="polite" aria-busy="false">Ready</span><div class="generation-steps" role="progressbar" aria-label="Generation steps" aria-valuemin="0" hidden></div></div><button type="button" class="btn btn-primary" data-action="generate" title="Generate with the current workflow · Ctrl+Enter">${icon('image')}<span>Generate</span><kbd>Ctrl+Enter</kbd></button></footer>`:''}
+   ${this.workspace?`<footer class="generation-bar"><div class="generation-controls"><div class="generation-readout"><div class="generation-meta"><span class="generation-dot-key" hidden></span><span class="generation-status" role="status" aria-live="polite" aria-busy="false">Ready</span></div><div class="generation-steps" role="progressbar" aria-label="Generation steps" aria-valuemin="0" hidden></div></div><button type="button" class="btn btn-primary" data-action="generate" title="Generate with the current workflow · Ctrl+Enter">${icon('image')}<span>Generate</span><kbd>Ctrl+Enter</kbd></button></div></footer>`:''}
    <section class="prompt-panel" aria-label="Import MOSS prompt" hidden><header><h2>Import prompt</h2>${button('close-import','close','','Close prompt import')}</header><textarea class="textarea" data-field="prompt_import" aria-label="MOSS prompt JSON" placeholder="Paste MOSS prompt JSON…" spellcheck="false"></textarea><div class="import-source" hidden><h3 title="MOSS pixel prompts omit their canvas dimensions. Choose the source canvas; your current canvas stays unchanged.">Source canvas</h3><div class="source-controls"><label>Aspect ratio<input class="input input-sm" data-field="import_source_ratio" aria-label="Source aspect ratio" placeholder="3:2"/></label><label>Megapixels<input class="input input-sm" type="number" min="0.01" step="0.25" data-field="import_source_megapixels" aria-label="Source megapixels"/></label><details class="source-exact"><summary title="Use the exact pixel dimensions of the source prompt">Exact size</summary><div><label>Width<input class="input input-sm" type="number" min="16" step="16" data-field="import_source_width" aria-label="Source width"/></label><label>Height<input class="input input-sm" type="number" min="16" step="16" data-field="import_source_height" aria-label="Source height"/></label></div></details></div><div class="source-actions"><button type="button" class="btn btn-sm" data-action="import-current-canvas" title="The prompt was created at this node's current aspect ratio and megapixels">Use current canvas</button><button type="button" class="btn btn-sm" data-action="import-source-canvas">Import</button></div></div><p class="import-error" role="alert" hidden></p><div class="prompt-actions">${button('paste-prompt','paste','Read clipboard')}${button('apply-prompt','check','Import')}</div></section>
    <ul class="menu menu-sm overlap-menu" aria-label="Boxes under pointer" hidden></ul><div class="list-drop-hint" role="status" hidden></div>
    <div class="feedback" role="status" aria-live="polite" hidden></div><input type="file" accept="image/*" class="file-picker" hidden/>
@@ -84,7 +84,9 @@ export class BBoxEditor {
   this.eventWindow.addEventListener('wheel',this.captureWheel,{capture:true,passive:false});this.eventWindow.addEventListener('blur',this.captureBlur);
   this.eventWindow.addEventListener('keydown',this.captureKey,true);this.eventWindow.addEventListener('keyup',this.captureKeyUp,true);
   for(const type of ['copy','cut','paste'])this.eventWindow.addEventListener(type,this.captureClipboard,true);
-  this.dialog.showModal();this.shortcutHelp=installShortcutHelp(this.root);this.observer=new ResizeObserver(()=>this.fit());this.observer.observe(this.viewport);this.render();this.loadReference();
+  this.dialog.showModal();this.shortcutHelp=installShortcutHelp(this.root);
+  this.observer=new ResizeObserver(()=>{this.fit();this.updateStepMeter();});
+  this.observer.observe(this.viewport);this.render();this.loadReference();
   this.viewport.focus();
  }
  close(){if(this.closed)return;this.finishGroupRename(false,false);this.closed=true;if(this.eventWindow){this.eventWindow.removeEventListener('keydown',this.captureKey,true);this.eventWindow.removeEventListener('keyup',this.captureKeyUp,true);this.eventWindow.removeEventListener('wheel',this.captureWheel,true);this.eventWindow.removeEventListener('blur',this.captureBlur);for(const type of ['copy','cut','paste'])this.eventWindow.removeEventListener(type,this.captureClipboard,true);}this.shortcutHelp?.destroy();this.observer?.disconnect();clearTimeout(this.feedbackTimer);clearTimeout(this.zoomCursorTimer);if(this.dialog?.open)this.dialog.close();this.host?.remove();this.adapter.closed?.();}
@@ -97,33 +99,39 @@ export class BBoxEditor {
   status.textContent=message;
   status.setAttribute('aria-busy',String(busy));
   this.generationStatusRevision=(this.generationStatusRevision||0)+1;
+  this.generationProgress=Number.isInteger(steps)&&steps>0&&Number.isFinite(step)
+   ? {value:Math.min(steps,Math.max(0,step)),steps}:null;
+  this.updateStepMeter();
+ }
+ updateStepMeter(){
+  if(!this.workspace||this.closed)return;
   const bar=this.root.querySelector('.generation-steps');
-  if(!Number.isInteger(steps)||steps<1||!Number.isFinite(step)){
+  const key=this.root.querySelector('.generation-dot-key');
+  if(!this.generationProgress){
    bar.hidden=true;
+   key.hidden=true;
    return;
   }
-  const value=Math.min(steps,Math.max(0,step));
+  const {value,steps}=this.generationProgress;
   bar.hidden=false;
+  const available=Math.max(1,Math.floor((bar.clientWidth||272)/7.5));
+  const stepsPerDot=Math.ceil(steps/available);
+  const dots=Math.ceil(steps/stepsPerDot);
+  key.hidden=stepsPerDot===1;
+  key.textContent=`${stepsPerDot} steps per dot`;
   bar.setAttribute('aria-valuemax',String(steps));
   bar.setAttribute('aria-valuenow',String(value));
-  bar.style.setProperty('--step-count',String(steps));
-  bar.classList.toggle('dense',steps>18);
-  if(steps>60){
-   bar.replaceChildren();
-   bar.classList.add('continuous');
-   bar.style.setProperty('--step-fill',`${value*100/steps}%`);
-   return;
-  }
-  bar.classList.remove('continuous');
-  const fill=value===steps?100:Math.max(0,(value-.5)*100/steps);
+  bar.setAttribute('aria-valuetext',`Step ${value} of ${steps}`);
+  bar.style.setProperty('--step-count',String(dots));
+  bar.classList.toggle('dense',dots>18);
+  const fill=value===steps?100:Math.max(0,(value/stepsPerDot-.5)*100/dots);
   bar.style.setProperty('--step-fill',`${fill}%`);
-  if(bar.children.length!==steps){
-   const dots=Array.from({length:steps},()=>document.createElement('span'));
-   bar.replaceChildren(...dots);
+  if(bar.children.length!==dots){
+   bar.replaceChildren(...Array.from({length:dots},()=>document.createElement('span')));
   }
   Array.from(bar.children).forEach((dot,index)=>{
-   dot.classList.toggle('done',index<value);
-   dot.classList.toggle('current',index===Math.ceil(value)-1);
+   dot.classList.toggle('done',value>=Math.min((index+1)*stepsPerDot,steps));
+   dot.classList.toggle('current',index===Math.ceil(value/stepsPerDot)-1);
   });
  }
  async generate(){
