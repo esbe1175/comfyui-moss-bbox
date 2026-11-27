@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-moss-bbox"
+version = "1.0.0"
+description = "A region editor and prompt builder for MOSS-Image in ComfyUI."
+license = { file = "LICENSE" }
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/esbe1175/comfyui-moss-bbox"
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "MOSS-Image BBOX Editor"
+requires-comfyui = ">=0.44.0"
